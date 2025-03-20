@@ -5,12 +5,36 @@ export default function Home() {
      <div className="flex-1 flex justify-center items-center">
         <form action="" className="flex flex-col gap-14 items-center text-gray-text">
 
-            <div className="flex flex-wrap items-center justify-center gap-2 font-bold">
+            <div className="flex flex-wrap w-full items-center justify-center gap-2 font-bold">
                 <label htmlFor="" id="nomeProjetoForm">Vou trabalhar em</label>
-                <input type="text" id="nomeProjetoForm" placeholder="Dê um nome para o seu projeto" />
+                <input 
+                    type="text" 
+                    id="nomeProjetoForm"
+                    list="sujestaoNomeProjetoForm" 
+                    placeholder="Dê um nome para o seu projeto" 
+                    className="flex-1 h-10 border-b-2 border-gray-placeholder px-2 transition-colors duration-200
+                    focus:border-green focus:outline-none"
+                    />
+                
+                <datalist id="sujestaoNomeProjetoForm">
+                    <option value="Oi" />
+                    <option value="Tudo" />
+                    <option value="Bem" />
+                    <option value="?" />
+                </datalist>
 
                 <label htmlFor="" id="minutosForm">durante</label>
-                <input type="number" name="" id="minutosForm" placeholder="00" />
+                <input 
+                    type="number" 
+                    name="" 
+                    id="minutosForm" 
+                    placeholder="00"
+                    step={5}
+                    min={5}
+                    max={60}
+                    className="h-10 border-b-2 border-gray-placeholder px-2 w-16 transition-colors duration-200
+                    focus:border-green focus:outline-none"
+                    />
 
                 <span>minutos.</span>
             </div>
@@ -25,10 +49,16 @@ export default function Home() {
                 <span className="bg-gray-divider px-4 py-8 rounded-lg">0</span>
             </div>
 
-            <div className="flex items-center justify-center gap-3">
+            <button 
+                type="submit" 
+                disabled 
+                className="flex items-center justify-center gap-2 w-full p-4 rounded-lg font-bold cursor-pointer 
+                    bg-green transition-colors duration-200 hover:bg-green-dark disabled:opacity-70 
+                    disabled:cursor-not-allowed disabled:hover:bg-green"
+                >
                 <Play />
-                <button type="submit">Começar</button>
-            </div>
+                Começar
+            </button>
         </form>
      </div>
     );
