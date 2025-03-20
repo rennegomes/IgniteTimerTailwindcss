@@ -3,7 +3,7 @@ import { Play } from "@phosphor-icons/react/dist/ssr";
 export default function Home() {
     return (
      <div className="flex-1 flex justify-center items-center">
-        <form action="" className="flex flex-col gap-14 items-center text-gray-text">
+        <form action="" className="flex flex-col gap-14 items-center text-gray-title">
 
             <div className="flex flex-wrap w-full items-center justify-center gap-2 font-bold">
                 <label htmlFor="" id="nomeProjetoForm">Vou trabalhar em</label>
