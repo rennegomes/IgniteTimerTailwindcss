@@ -1,20 +1,43 @@
 'use client'
 
 import { Play } from "@phosphor-icons/react/dist/ssr";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-interface FormaDadoNovoCiclo{
-    nomeProjetoForm: string,
+interface FormaDadoNovoCiclo {
+    nomeProjetoForm: string;
     minutosForm: number
 }
 
+interface Ciclo {
+    id: string;
+    tarefa: string;
+    minuto: number
+}
 export default function Home() {
+
+    const [ciclos, setCiclos] = useState<Ciclo[]>([]);
+    const [idCicloAtivo, setIdCicloAtivo] = useState<string | null>(null);
 
     const { register, handleSubmit, watch, reset } = useForm<FormaDadoNovoCiclo>()
     function criaNovoCiclo(data: FormaDadoNovoCiclo){
-        console.log(data);
+
+        const id = String(new Date().getTime())
+
+        const novoCiclo: Ciclo ={
+            id,
+            tarefa: data.nomeProjetoForm,
+            minuto: data.minutosForm
+        }
+
+        setCiclos((state) => [...state, novoCiclo])
+        setIdCicloAtivo(id)
+
         reset();
     }
+
+    const cicloAtivo = ciclos.find((ciclos) => ciclos.id === idCicloAtivo)
+    console.log(cicloAtivo)
 
     const nomeProjetoForm = watch('nomeProjetoForm');
     const minutosForm = watch('minutosForm');
