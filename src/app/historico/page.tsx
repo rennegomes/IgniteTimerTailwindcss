@@ -32,6 +32,22 @@ export default function historico() {
                      <Status corStatus="verde" nomeStatus="concluido" />
                   </td>
                </tr>
+               <tr className="bg-gray-divider text-gray-text">
+                  <td className="p-4 text-sm leading-6">Tarefa</td>
+                  <td className="p-4 text-sm leading-6">20 minutos</td>
+                  <td className="p-4 text-sm leading-6">Há dois meses</td>
+                  <td className="p-4 text-sm leading-6">
+                     <Status corStatus="amarelo" nomeStatus="andamento" />
+                  </td>
+               </tr>
+               <tr className="bg-gray-divider text-gray-text">
+                  <td className="p-4 text-sm leading-6">Tarefa</td>
+                  <td className="p-4 text-sm leading-6">20 minutos</td>
+                  <td className="p-4 text-sm leading-6">Há dois meses</td>
+                  <td className="p-4 text-sm leading-6">
+                     <Status corStatus="vermelho" nomeStatus="interrompido" />
+                  </td>
+               </tr>
             </tbody>
          </table>
         </div>
