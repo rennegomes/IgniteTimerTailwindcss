@@ -18,6 +18,7 @@ export default function Home() {
 
     const [ciclos, setCiclos] = useState<Ciclo[]>([]);
     const [idCicloAtivo, setIdCicloAtivo] = useState<string | null>(null);
+    const [quantidadeSegundosPassados, setQuantidadeSegundosPassados] = useState(0)
 
     const { register, handleSubmit, watch, reset } = useForm<FormaDadoNovoCiclo>()
     function criaNovoCiclo(data: FormaDadoNovoCiclo){
@@ -37,7 +38,15 @@ export default function Home() {
     }
 
     const cicloAtivo = ciclos.find((ciclos) => ciclos.id === idCicloAtivo)
-    console.log(cicloAtivo)
+
+    const totalSegundos = cicloAtivo ? cicloAtivo.minuto * 60 : 0
+    const segundosAtual = cicloAtivo?  totalSegundos - quantidadeSegundosPassados : 0
+
+    const quantidadeMinutos = Math.floor(segundosAtual / 60)
+    const quantidadeSegundos = segundosAtual % 60
+
+    const minutosPreenchido = String(quantidadeMinutos).padStart(2, '0')
+    const segundosPreenchido = String(quantidadeSegundos).padStart(2, '0')
 
     const nomeProjetoForm = watch('nomeProjetoForm');
     const minutosForm = watch('minutosForm');
@@ -87,13 +96,13 @@ export default function Home() {
             </div>
 
             <div className="flex items-center gap-4 text-[10rem] leading-32 font-mono">
-                <span className="bg-gray-divider px-4 py-8 rounded-lg">0</span>
-                <span className="bg-gray-divider px-4 py-8 rounded-lg">0</span>
+                <span className="bg-gray-divider px-4 py-8 rounded-lg">{minutosPreenchido[0]}</span>
+                <span className="bg-gray-divider px-4 py-8 rounded-lg">{minutosPreenchido[1]}</span>
                 <div className="flex justify-center text-green mb-8 pr-3 w-16 overflow-hidden">
                     <span>:</span>
                 </div>
-                <span className="bg-gray-divider px-4 py-8 rounded-lg">0</span>
-                <span className="bg-gray-divider px-4 py-8 rounded-lg">0</span>
+                <span className="bg-gray-divider px-4 py-8 rounded-lg">{segundosPreenchido[0]}</span>
+                <span className="bg-gray-divider px-4 py-8 rounded-lg">{segundosPreenchido[1]}</span>
             </div>
 
             <button 
