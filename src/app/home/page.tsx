@@ -1,7 +1,9 @@
 'use client'
 
+import { HandPalm } from "@phosphor-icons/react";
 import { Play } from "@phosphor-icons/react/dist/ssr";
-import { useState } from "react";
+import { differenceInSeconds } from "date-fns";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface FormaDadoNovoCiclo {
@@ -12,7 +14,10 @@ interface FormaDadoNovoCiclo {
 interface Ciclo {
     id: string;
     tarefa: string;
-    minuto: number
+    minuto: number;
+    dataInicio: Date;
+    dataInterrompida?: Date
+    dataFinalizada?: Date
 }
 export default function Home() {
 
@@ -28,16 +33,62 @@ export default function Home() {
         const novoCiclo: Ciclo ={
             id,
             tarefa: data.nomeProjetoForm,
-            minuto: data.minutosForm
+            minuto: data.minutosForm,
+            dataInicio: new Date()
         }
 
         setCiclos((state) => [...state, novoCiclo])
         setIdCicloAtivo(id)
+        setQuantidadeSegundosPassados(0)
 
         reset();
     }
 
     const cicloAtivo = ciclos.find((ciclos) => ciclos.id === idCicloAtivo)
+
+    useEffect(() => {
+        let intervalo: number;
+
+        if (cicloAtivo){
+            intervalo = setInterval(() => {
+                const diferencaSegundos: number = differenceInSeconds(new Date(), cicloAtivo.dataInicio)
+
+                if(diferencaSegundos >= totalSegundos){
+                    setCiclos((state) =>
+                        state.map((ciclo) => {
+                        if(ciclo.id === idCicloAtivo){
+                            return { ...ciclo, dataFinalizada: new Date() }
+                        } else {
+                            return ciclo
+                        }
+                    }),
+                )
+                    setQuantidadeSegundosPassados(totalSegundos)
+                    clearInterval(intervalo)
+                } else {
+                    setQuantidadeSegundosPassados(diferencaSegundos)
+                }
+            }, 1000)
+        }
+        return () => {
+            clearInterval(intervalo)
+        }
+    }, [cicloAtivo])
+
+    function paraContador(){
+        setCiclos((state) =>
+            state.map((ciclo) => {
+                if (ciclo.id === idCicloAtivo){
+                    return { ...ciclo, dataInterrompida: new Date() }
+                } else {
+                    return ciclo
+                }
+            }),
+        )
+        document.title = 'Timer'
+
+        setIdCicloAtivo(null)
+    }
 
     const totalSegundos = cicloAtivo ? cicloAtivo.minuto * 60 : 0
     const segundosAtual = cicloAtivo?  totalSegundos - quantidadeSegundosPassados : 0
@@ -47,6 +98,12 @@ export default function Home() {
 
     const minutosPreenchido = String(quantidadeMinutos).padStart(2, '0')
     const segundosPreenchido = String(quantidadeSegundos).padStart(2, '0')
+
+    useEffect(() => {
+        if (cicloAtivo){
+            document.title = `${minutosPreenchido}:${segundosPreenchido}`
+        }
+    },[cicloAtivo, minutosPreenchido, segundosPreenchido])
 
     const nomeProjetoForm = watch('nomeProjetoForm');
     const minutosForm = watch('minutosForm');
@@ -63,6 +120,7 @@ export default function Home() {
                     id="nomeProjetoForm"
                     list="sujestaoNomeProjetoForm" 
                     placeholder="Dê um nome para o seu projeto"
+                    disabled={!!cicloAtivo}
                     required
                     {...register('nomeProjetoForm')}
                     className="flex-1 h-10 border-b-2 border-gray-placeholder px-2 transition-colors duration-200
@@ -86,6 +144,7 @@ export default function Home() {
                     step={5}
                     min={5}
                     max={60}
+                    disabled={!!cicloAtivo}
                     required
                     {...register('minutosForm', { valueAsNumber: true })}
                     className="text-center h-10 border-b-2 border-gray-placeholder px-2 w-16 transition-colors duration-200
@@ -105,16 +164,28 @@ export default function Home() {
                 <span className="bg-gray-divider px-4 py-8 rounded-lg">{segundosPreenchido[1]}</span>
             </div>
 
-            <button 
-                type="submit" 
-                disabled={botaoDesabilitado}
-                className="flex items-center justify-center gap-2 w-full p-4 rounded-lg font-bold cursor-pointer 
-                    bg-green transition-colors duration-200 hover:bg-green-dark disabled:opacity-70 
-                    disabled:cursor-not-allowed disabled:hover:bg-green"
-                >
-                <Play />
-                Começar
-            </button>
+            {cicloAtivo? 
+                <button 
+                    type="button"
+                    onClick={paraContador}
+                    className="flex items-center justify-center gap-2 w-full p-4 rounded-lg font-bold cursor-pointer 
+                        bg-red transition-colors duration-200 hover:bg-red-dark"
+                    >
+                    <HandPalm size={20}/>
+                    Interromper
+                </button>
+            :
+                <button 
+                    type="submit" 
+                    disabled={botaoDesabilitado}
+                    className="flex items-center justify-center gap-2 w-full p-4 rounded-lg font-bold cursor-pointer 
+                        bg-green transition-colors duration-200 hover:bg-green-dark disabled:opacity-70 
+                        disabled:cursor-not-allowed disabled:hover:bg-green"
+                    >
+                    <Play />
+                    Começar
+                </button>
+            }
         </form>
      </div>
     );
