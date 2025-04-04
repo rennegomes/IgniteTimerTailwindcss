@@ -1,7 +1,11 @@
-import { useForm } from "react-hook-form"
+import { useContext } from "react";
+import { CicloContext } from "../../page";
+import { useFormContext } from "react-hook-form";
 
 export default function NovoCicloForm (){
-    const { register, handleSubmit, watch, reset } = useForm<FormaDadoNovoCiclo>()
+
+    const { cicloAtivo, idCicloAtivo, marcaFimCiclo } = useContext(CicloContext);
+    const { register } = useFormContext();
 
     return(
             <div className="flex flex-wrap w-full items-center justify-center gap-2 font-bold">

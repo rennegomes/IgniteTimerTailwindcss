@@ -4,9 +4,7 @@ import { CicloContext } from "../../page";
 
 export default function Contador(){
 
-    const { cicloAtivo, idCicloAtivo, marcaFimCiclo } = useContext(CicloContext);
-
-    const [quantidadeSegundosPassados, setQuantidadeSegundosPassados] = useState(0)
+    const { cicloAtivo, quantidadeSegundosPassados, marcaFimCiclo, setSegundosPassados } = useContext(CicloContext);
     
     const totalSegundos = cicloAtivo ? cicloAtivo.minuto * 60 : 0
 
@@ -21,17 +19,17 @@ export default function Contador(){
 
                     marcaFimCiclo()
 
-                    setQuantidadeSegundosPassados(totalSegundos)
+                    setSegundosPassados(totalSegundos)
                     clearInterval(intervalo)
                 } else {
-                    setQuantidadeSegundosPassados(diferencaSegundos)
+                    setSegundosPassados(diferencaSegundos)
                 }
             }, 1000)
         }
         return () => {
             clearInterval(intervalo)
         }
-    }, [cicloAtivo, totalSegundos, marcaFimCiclo])
+    }, [cicloAtivo, totalSegundos, marcaFimCiclo, setSegundosPassados])
 
         const segundosAtual = cicloAtivo ?  totalSegundos - quantidadeSegundosPassados : 0
     
